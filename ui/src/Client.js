@@ -8,6 +8,19 @@ function getSummary(cb) {
     .then(cb);
 }
 
+function getCount(count){
+  return fetch("/count", {
+    method: 'POST',
+    accept: "application/json",
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({counter: count})
+  })
+    .then(checkStatus)
+    .then(parseJSON)
+}
+
 function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
     return response;
@@ -23,5 +36,5 @@ function parseJSON(response) {
   return response.json();
 }
 
-const Client = { getSummary };
+const Client = { getSummary, getCount };
 export default Client;
