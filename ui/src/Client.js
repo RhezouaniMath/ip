@@ -21,6 +21,19 @@ function getCount(count){
     .then(parseJSON)
 }
 
+function getDice(){
+  {
+    return fetch("/dice", {
+      method: 'POST',
+      headers: {
+      'Content-Type': 'application/json', 'Accept': "application/json"
+    },
+    })
+      .then(checkStatus)
+      .then(parseJSON)
+  }
+}
+
 function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
     return response;
@@ -36,5 +49,6 @@ function parseJSON(response) {
   return response.json();
 }
 
-const Client = { getSummary, getCount };
+//const Client = { getSummary, getCount };
+const Client = { getSummary, getCount, getDice};
 export default Client;

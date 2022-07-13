@@ -1,0 +1,41 @@
+.Header {
+    text-align: center;
+  }
+  
+  .main-header {
+    background-color: white;
+    color: green;
+    font-size: 2rem;
+    margin-bottom: 8px;
+}
+
+.main-navigation {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: green;
+    font-size: 1.3rem;
+    height: 45px;
+}
+  
+
+.title{
+
+    font-family:'Times New Roman', Times, serif;
+    font-size: 40pt ;
+}
+
+  .button{
+    width:  6cm;
+    height: 2cm;
+    margin: 0.4cm 0.1cm ;
+    padding: 0.5cm 0.5cm;
+    color: rgb(76, 66, 8);
+    background-color: rgba(50, 148, 180, 0.39);
+    /*font-family: 'Abadi';*/
+    font-family:'Times New Roman', Times, serif;
+    font-size: 12pt ;
+    font-weight: bold;
+    border-radius: 0.5cm; 
+  }
+  

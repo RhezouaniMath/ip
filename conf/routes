@@ -12,3 +12,5 @@ GET     /api/summary                controllers.HomeController.appSummary
 GET     /*file                      controllers.FrontendController.assetOrDefault(file)
 
 POST     /count                     controllers.CountController.counterUp
+
+POST      /dice                      controllers.DiceController.ThrowDice

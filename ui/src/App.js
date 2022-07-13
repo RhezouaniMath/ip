@@ -3,9 +3,11 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
+  Switch,
   Link,
   useParams,
 } from "react-router-dom";
+import { Header } from "./Header/Header";
 
 //import reactLogo from "./images/react.svg";
 //import playLogo from "./images/play.svg";
@@ -13,6 +15,8 @@ import {
 import Client from "./Client";
 
 import "./App.css";
+import { GooseGame } from "./GooseGame/GooseGame";
+import { Dominoes } from "./Dominoes/Dominoes"
 
 const Tech = () => {
   const params = useParams();
@@ -22,7 +26,7 @@ const Tech = () => {
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { title: "Game of the Goose & Dominoes", counter: "1"};
+    this.state = { title: "Game of the Goose & Dominoes", counter: "1", dice: " "};
   }
 
   async componentDidMount() {
@@ -47,19 +51,29 @@ class App extends Component {
     )
   }
 
+  async getDice(){
+
+    Client.getDice().then( (response) => {
+        this.setState({
+            dice: response.dice        
+          })
+      })
+  }
+
   render() {
     return (
       <Router>
+        <Header />
+        
         <div className="App">
-          <h1> Game of the Goose & Dominoes </h1>
-          <nav>
-            <button onClick={()=> this.getNewCount() } className = "button "> Teller: {this.state.counter} </button>
-            <button id = "Game of the Goose" className = "button" > Game of the Goose </button>
-            <button id = "Dominoes" className = "button" > Dominoes </button>
+        <Routes>
+          <Route exact path="/GooseGame" element={<GooseGame/>}/>
+          <Route exact path="/Dominoes" element={<Dominoes/>} />
+        </Routes>
+        <nav>
+          <button onClick={()=> this.getNewCount() } className = "button "> Teller: {this.state.counter} </button>
+          <button onClick={()=> this.getDice() } className = "button" > Dice: {this.state.dice} </button>
           </nav>
-          <Routes>
-            <Route path="/:tech" element={<Tech />} />
-          </Routes>
         </div>
       </Router>
     );
@@ -67,3 +81,4 @@ class App extends Component {
 }
 
 export default App;
+//<button className = "button" > Dice: {this.state.dice} </button>
