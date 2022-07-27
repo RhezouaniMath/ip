@@ -1,5 +1,18 @@
 import React from "react";
 
+const array = [];
+
+for (let i = 0; i < 64; i++) {
+    if (i==0){
+        array[i] = "START";
+    }
+    else{ 
+        let number = i;
+        let text = number.toString();
+        array[i] = text;
+    }
+}
+
 export function GooseGame() {
     return <div>
         <h2>Game of the Goose</h2>
@@ -8,13 +21,13 @@ export function GooseGame() {
                 UNDER CONSTRUCTION
             </div>
             <div>
-                
-            </div>
-            <div>
-                <button> START </button>
-                <button> 1 </button>        
-                <button> 2 </button>
-                <button> FINISH </button> 
+                {array.map( 
+                    (i) => 
+                    (   <div id = {i} >
+                            {i}
+                        </div>)
+                    )
+                }
             </div>
         </div>
     </div>

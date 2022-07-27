@@ -66,14 +66,17 @@ class App extends Component {
         <Header />
         
         <div className="App">
-        <Routes>
-          <Route exact path="/GooseGame" element={<GooseGame/>}/>
-          <Route exact path="/Dominoes" element={<Dominoes/>} />
-        </Routes>
+        
         <nav>
           <button onClick={()=> this.getNewCount() } className = "button "> Teller: {this.state.counter} </button>
           <button onClick={()=> this.getDice() } className = "button" > Dice: {this.state.dice} </button>
-          </nav>
+        </nav>
+
+        <Routes>
+          <Route path="/GooseGame" element={<GooseGame/>}/>
+          <Route path="/Dominoes" element={<Dominoes/>} />
+        </Routes>
+
         </div>
       </Router>
     );
