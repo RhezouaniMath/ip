@@ -22,7 +22,6 @@ function getCount(count){
 }
 
 function getDice(){
-  {
     return fetch("/dice", {
       method: 'POST',
       headers: {
@@ -31,8 +30,49 @@ function getDice(){
     })
       .then(checkStatus)
       .then(parseJSON)
-  }
 }
+
+function getGame(nrOfPlayers){
+  return fetch("/start", {
+    method: 'POST',
+    accept: "application/json",
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({nrOfPlayers: nrOfPlayers})
+  })
+  .then(checkStatus)
+  .then(parseJSON)
+}
+
+function playGame(gooses, lastMove, position, turn, skipTurn, waitForPlayersBehind){
+  return fetch("/play", {
+    method: 'POST',
+    accept: "application/json",
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      gooses: gooses,
+      lastMove: lastMove,
+      position: position,
+      turn: turn,
+      skipTurn: skipTurn,
+      waitForPlayersBehind
+    })
+  })
+  .then(checkStatus)
+  .then(parseJSON)
+}
+
+/*
+val gooses = (json \ "nrOfPlayers").as[Array[Int]]
+      var lastMove = (json \ "lastMove").as[Array[Int]]
+      var position = (json \ "position").as[Array[Int]]
+      var turn = (json \ "turn").as[Array[Boolean]]
+      var skipTurn = (json \ "skipTurn").as[Array[Boolean]]
+      var waitForPlayersBehind = (json \ "waitForPlayersBehind").as[Array[Boolean]]
+*/
 
 function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
@@ -50,5 +90,5 @@ function parseJSON(response) {
 }
 
 //const Client = { getSummary, getCount };
-const Client = { getSummary, getCount, getDice};
+const Client = { getSummary, getCount, getDice, getGame, playGame};
 export default Client;

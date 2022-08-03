@@ -1,7 +1,7 @@
 package app
 import scala.util.Random
 
-  class Game(var dice: Int, var player: Player, var gooses: List[Int], var finished: Boolean) {
+  class Game(var dice : Int = 0, var player: Player, var gooses: List[Int] = List(0,0,0,0,0), var finished: Boolean = false) {
 
     def scatterGooses(): Unit = {
       var goose1 = randomChoiceGoose(0, 0, 0, 0)
@@ -45,13 +45,13 @@ import scala.util.Random
     }
 
     def checkRules(player: Player): Unit = {
-      this.bridge(player)
-      this.inn(player)
-      this.well(player)
-      this.bush(player)
-      this.prison(player)
-      this.death(player)
-      this.goose(player)
+      bridge(player)
+      inn(player)
+      well(player)
+      bush(player)
+      prison(player)
+      death(player)
+      goose(player)
     }
 
     def bridge(player: Player): Unit = {
@@ -92,12 +92,34 @@ import scala.util.Random
 
     def wellPrison(player: Player, spot: Int): Unit={
       if (player.getPosition == spot){
-        if (player.playersBehind()){
-          player.setWaitForPlayerBehind(true)
-        }
-        else{
-          player.setSkipTurn(true)
-        }
+        wellPrisonAtTheSpot(player, spot)
+      }
+    }
+
+    def wellPrisonAtTheSpot(player: Player, spot: Int): Unit={
+      if (player.playersBehind()){
+        wellPrisonWhenPlayersBehind(player, spot)
+      }
+      else{
+        wellPrisonWhenNoPlayersBehind(player)
+      }
+      freeOtherPlayers(player, spot)
+    }
+
+    def wellPrisonWhenPlayersBehind(player: Player, spot: Int): Unit ={
+      player.setWaitForPlayerBehind(true)
+    }
+
+    def wellPrisonWhenNoPlayersBehind(player: Player): Unit ={
+      player.setSkipTurn(true)
+    }
+
+    def freeOtherPlayers(player: Player, spot: Int): Unit ={
+      var speler = player
+      speler = speler.getNextPlayer
+      while(speler != player){
+        speler.setMeFree(spot)
+        speler = speler.getNextPlayer
       }
     }
 
@@ -113,23 +135,47 @@ import scala.util.Random
 
     def play(player: Player): Unit={
       if (player.getTurn){
-        if (player.getSkipTurn){
-          player.switchSkipTurn()
-        }
-        else{
-          if ( player.getWaitForPlayersBehind && (!player.playersBehind()) ){
-              player.switchGetWaitForPlayersBehind()
-              playAnyway(player)
-          }
-          else if (!player.getWaitForPlayersBehind) {
-            playAnyway(player)
-          }
-        }
-        player.switchTurn()
-        player.getNextPlayer.switchTurn()
+        yourTurnPlay(player)
       }
       else{
-        play(player.getNextPlayer)
+        notYourTurnPlay(player)
+      }
+    }
+
+    def yourTurnPlay(player: Player): Unit={
+      skipOrNoSkipPlay(player)
+      giveTurnToNextPlayer(player)
+    }
+
+    def skipOrNoSkipPlay(player: Player): Unit={
+      if (player.getSkipTurn){
+        skipTurnPlay(player)
+      }
+      else{
+        noSkipTurnPlay(player)
+      }
+    }
+
+    def notYourTurnPlay(player: Player): Unit={
+      play(player.getNextPlayer)
+    }
+
+    def skipTurnPlay(player: Player): Unit={
+      player.switchSkipTurn()
+    }
+
+    def noSkipTurnPlay(player: Player): Unit={
+      if (player.getWaitForPlayersBehind) {
+        waitPlay(player)
+      }
+      else{
+        playAnyway(player)
+      }
+    }
+
+    def waitPlay(player: Player): Unit ={
+      if(!player.playersBehind()){
+        noOneToWaitForPlay(player)
       }
     }
 
@@ -139,9 +185,29 @@ import scala.util.Random
       checkRules(player)
     }
 
-    def getDice: Int={ this.dice}
-    def getPlayer: Player={this.player}
-    def getGooses: List[Int]={this.gooses}
-    def getFinished: Boolean={this.finished}
+    def giveTurnToNextPlayer(player: Player): Unit={
+      player.switchTurn()
+      player.getNextPlayer.switchTurn()
+    }
+
+    def noOneToWaitForPlay(player: Player): Unit={
+      player.setWaitForPlayerBehind(false)
+    }
+
+    def getDice: Int={
+      this.dice
+    }
+
+    def getPlayer: Player={
+      this.player
+    }
+
+    def getGooses: List[Int]={
+      this.gooses
+    }
+
+    def getFinished: Boolean={
+      this.finished
+    }
 
   }

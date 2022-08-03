@@ -69,19 +69,29 @@ class Player(
   }
 
 
-
-
-  def setSkipTurn(bool: Boolean): Unit={this.skipTurn = bool }
-
-  def setFirstPlayer(player: Player): Unit={this.firstPlayer = player}
+  def setLastMove(lastM: Int): Unit={this.lastMove = lastM}
 
   def setPosition(pos: Int): Unit={this.position = pos}
 
+  def setTurn(bool: Boolean): Unit={this.turn = bool}
+
+  def setSkipTurn(bool: Boolean): Unit={this.skipTurn = bool }
+
   def setWaitForPlayerBehind(bool: Boolean) : Unit={this.waitForPlayersBehind = bool}
+
+  def setFirstPlayer(player: Player): Unit={this.firstPlayer = player}
+
+  def setValues(lastM: Int, pos: Int, t: Boolean, skipT: Boolean, waitF: Boolean): Unit ={
+    setLastMove(lastM)
+    setPosition(pos)
+    setTurn(t)
+    setSkipTurn(skipT)
+    setWaitForPlayerBehind(waitF)
+  }
 
 
   def move(nrofsteps:Int): Unit ={
-    var pos = this.position
+    val pos = this.position
     if ( pos + nrofsteps < 64 && pos + nrofsteps > -1 ){
       this.position = pos + nrofsteps
     }
@@ -113,6 +123,13 @@ class Player(
     }
     else {
       this.skipTurn = true
+    }
+  }
+
+  def setMeFree(spot: Int): Unit={
+    if(this.position == spot){
+      this.waitForPlayersBehind = false
+      this.skipTurn = false
     }
   }
 

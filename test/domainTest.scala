@@ -861,6 +861,190 @@ class domainTest extends AnyFunSuite {
     assert(speler.getNextPlayer.getTurn)
   }
 
+  test ("2 GAME/PLAYER 10 PLAY: 4 FIRST BRANCH - skipTurn==true"){
+    var speler = new Player
+    var spel = new Game(player=speler)
+    spel.getPlayer.setSkipTurn(true)
+    spel.play(spel.getPlayer)
+    assert(!spel.getPlayer.getSkipTurn)
+    assert(!spel.getPlayer.getTurn)
+    assert(!spel.getPlayer.getNextPlayer.getSkipTurn)
+    assert(spel.getPlayer.getNextPlayer.getTurn)
+  }
+
+  test ("2 GAME/PLAYER 10 PLAY: 5 SECOND BRANCH - wait for players behind"){
+    var speler = new Player
+    var spel = new Game(player=speler)
+    spel.getPlayer.setWaitForPlayerBehind(true)
+    spel.getPlayer.setPosition(39)
+    spel.getPlayer.getNextPlayer.setPosition(7)
+    val pos1 = spel.getPlayer.getPosition
+    val turn1 = spel.getPlayer.getTurn
+    val skipTurn1 = spel.getPlayer.getSkipTurn
+    val wait1 = spel.getPlayer.getWaitForPlayersBehind
+    val nr1 = spel.getPlayer.getNrOfPlayers
+    spel.play(spel.getPlayer)
+    assert(spel.getPlayer.getPosition == pos1)
+    assert(spel.getPlayer.getTurn != turn1)
+    assert(spel.getPlayer.getSkipTurn == skipTurn1)
+    assert(spel.getPlayer.getWaitForPlayersBehind == wait1)
+    assert(spel.getPlayer.getNrOfPlayers == nr1)
+  }
+
+  test ("2 GAME/PLAYER 10 PLAY: 6 THIRD BRANCH - no one to wait for"){
+    var speler = new Player
+    var spel = new Game(player=speler)
+    spel.getPlayer.setWaitForPlayerBehind(true)
+    spel.getPlayer.setPosition(7)
+    spel.getPlayer.getNextPlayer.setPosition(39)
+    val pos1 = spel.getPlayer.getPosition
+    val turn1 = spel.getPlayer.getTurn
+    val skipTurn1 = spel.getPlayer.getSkipTurn
+    val wait1 = spel.getPlayer.getWaitForPlayersBehind
+    val nr1 = spel.getPlayer.getNrOfPlayers
+    spel.play(spel.getPlayer)
+    assert(spel.getPlayer.getPosition == pos1)
+    assert(spel.getPlayer.getTurn != turn1)
+    assert(spel.getPlayer.getSkipTurn == skipTurn1)
+    assert(spel.getPlayer.getWaitForPlayersBehind != wait1)
+    assert(spel.getPlayer.getNrOfPlayers == nr1)
+  }
+
+  test("2 GAME/PLAYER: 10 PLAY: 7 FOURTH BRANCH - nothing stops us"){
+    var speler = new Player
+    var spel = new Game(player = speler)
+    spel.play(spel.getPlayer)
+    if (spel.getDice == 6){
+      assert(spel.getPlayer.getLastMove == 6)
+      assert(spel.getPlayer.getPosition == 12)
+    }
+    else{
+      assert(spel.getPlayer.getLastMove == spel.getDice)
+      assert(spel.getPlayer.getPosition == spel.getDice)
+    }
+    assert(!spel.getPlayer.getTurn)
+    assert(spel.getPlayer.getNextPlayer.getTurn)
+    assert(!spel.getPlayer.getWaitForPlayersBehind)
+    assert(spel.getPlayer.getNrOfPlayers == 2)
+  }
+
+  test("2 GAME/PLAYER: 10 PLAY: 8 FOURTH BRANCH - nothing stops us - multiple"){
+    for (i <- 1 to 100){
+      var speler = new Player
+      var spel = new Game(player = speler)
+      spel.play(spel.getPlayer)
+      if (spel.getDice == 6){
+        assert(spel.getPlayer.getLastMove == 6)
+        assert(spel.getPlayer.getPosition == 12)
+      }
+      else{
+        assert(spel.getPlayer.getLastMove == spel.getDice)
+        assert(spel.getPlayer.getPosition == spel.getDice)
+      }
+      assert(!spel.getPlayer.getTurn)
+      assert(spel.getPlayer.getNextPlayer.getTurn)
+      assert(!spel.getPlayer.getWaitForPlayersBehind)
+      assert(spel.getPlayer.getNrOfPlayers == 2)
+    }
+  }
+
+  test ("2 GAME/PLAYER 10 PLAY: 9 FIRST BRANCH - skipTurn==true / NEXT PLAYER"){
+    var speler = new Player
+    var spel = new Game(player=speler)
+    spel.getPlayer.setTurn(false)
+    spel.getPlayer.getNextPlayer.setTurn(true)
+    spel.getPlayer.getNextPlayer.setSkipTurn(true)
+    spel.play(spel.getPlayer)
+    assert(!spel.getPlayer.getNextPlayer.getSkipTurn)
+    assert(!spel.getPlayer.getNextPlayer.getTurn)
+    assert(!spel.getPlayer.getSkipTurn)
+    assert(spel.getPlayer.getTurn)
+  }
+
+  test ("2 GAME/PLAYER 10 PLAY: 10 SECOND BRANCH - wait for players behind / NEXT PLAYER"){
+    var speler = new Player
+    var spel = new Game(player=speler)
+    spel.getPlayer.setTurn(false)
+    spel.getPlayer.getNextPlayer.setTurn(true)
+    spel.getPlayer.getNextPlayer.setWaitForPlayerBehind(true)
+    spel.getPlayer.setPosition(7)
+    spel.getPlayer.getNextPlayer.setPosition(39)
+    val pos1 = spel.getPlayer.getNextPlayer.getPosition
+    val turn1 = spel.getPlayer.getNextPlayer.getTurn
+    val skipTurn1 = spel.getPlayer.getNextPlayer.getSkipTurn
+    val wait1 = spel.getPlayer.getNextPlayer.getWaitForPlayersBehind
+    val nr1 = spel.getPlayer.getNextPlayer.getNrOfPlayers
+    spel.play(spel.getPlayer)
+    assert(spel.getPlayer.getNextPlayer.getPosition == pos1)
+    assert(spel.getPlayer.getNextPlayer.getTurn != turn1)
+    assert(spel.getPlayer.getNextPlayer.getSkipTurn == skipTurn1)
+    assert(spel.getPlayer.getNextPlayer.getWaitForPlayersBehind == wait1)
+    assert(spel.getPlayer.getNextPlayer.getNrOfPlayers == nr1)
+  }
+
+  test ("2 GAME/PLAYER 10 PLAY: 11 THIRD BRANCH - no one to wait for / NEXT PLAYER"){
+    var speler = new Player
+    var spel = new Game(player=speler)
+    spel.getPlayer.setTurn(false)
+    spel.getPlayer.getNextPlayer.setTurn(true)
+    spel.getPlayer.getNextPlayer.setWaitForPlayerBehind(true)
+    spel.getPlayer.setPosition(39)
+    spel.getPlayer.getNextPlayer.setPosition(7)
+    val pos1 = spel.getPlayer.getNextPlayer.getPosition
+    val turn1 = spel.getPlayer.getNextPlayer.getTurn
+    val skipTurn1 = spel.getPlayer.getNextPlayer.getSkipTurn
+    val wait1 = spel.getPlayer.getNextPlayer.getWaitForPlayersBehind
+    val nr1 = spel.getPlayer.getNextPlayer.getNrOfPlayers
+    spel.play(spel.getPlayer)
+    assert(spel.getPlayer.getNextPlayer.getPosition == pos1)
+    assert(spel.getPlayer.getNextPlayer.getTurn != turn1)
+    assert(spel.getPlayer.getNextPlayer.getSkipTurn == skipTurn1)
+    assert(spel.getPlayer.getNextPlayer.getWaitForPlayersBehind != wait1)
+    assert(spel.getPlayer.getNextPlayer.getNrOfPlayers == nr1)
+  }
+
+  test("2 GAME/PLAYER: 10 PLAY: 12 FOURTH BRANCH - nothing stops us / NEXT PLAYER"){
+    var speler = new Player
+    var spel = new Game(player = speler)
+    spel.getPlayer.setTurn(false)
+    spel.getPlayer.getNextPlayer.setTurn(true)
+    spel.play(spel.getPlayer)
+    if (spel.getDice == 6){
+      assert(spel.getPlayer.getNextPlayer.getLastMove == 6)
+      assert(spel.getPlayer.getNextPlayer.getPosition == 12)
+    }
+    else{
+      assert(spel.getPlayer.getNextPlayer.getLastMove == spel.getDice)
+      assert(spel.getPlayer.getNextPlayer.getPosition == spel.getDice)
+    }
+    assert(!spel.getPlayer.getNextPlayer.getTurn)
+    assert(spel.getPlayer.getTurn)
+    assert(!spel.getPlayer.getNextPlayer.getWaitForPlayersBehind)
+    assert(spel.getPlayer.getNextPlayer.getNrOfPlayers == 1)
+  }
+
+  test("2 GAME/PLAYER: 10 PLAY: 13 FOURTH BRANCH - nothing stops us - multiple / NEXT PLAYER"){
+    for (i <- 1 to 100){
+      var speler = new Player
+      var spel = new Game(player = speler)
+      spel.getPlayer.setTurn(false)
+      spel.getPlayer.getNextPlayer.setTurn(true)
+      spel.play(spel.getPlayer)
+      if (spel.getDice == 6){
+        assert(spel.getPlayer.getNextPlayer.getLastMove == 6)
+        assert(spel.getPlayer.getNextPlayer.getPosition == 12)
+      }
+      else{
+        assert(spel.getPlayer.getNextPlayer.getLastMove == spel.getDice)
+        assert(spel.getPlayer.getNextPlayer.getPosition == spel.getDice)
+      }
+      assert(!spel.getPlayer.getNextPlayer.getTurn)
+      assert(spel.getPlayer.getTurn)
+      assert(!spel.getPlayer.getNextPlayer.getWaitForPlayersBehind)
+      assert(spel.getPlayer.getNextPlayer.getNrOfPlayers == 1)
+    }
+  }
+
   test("2 GAME/PLAYER: 11 AUXILARY PLAY METHOD: playAnyway lets you move"){
     var speler = new Player
     var spel = new Game(0, speler, List(10, 14, 35, 45, 50), false)
@@ -871,5 +1055,4 @@ class domainTest extends AnyFunSuite {
     assert(speler.getPosition <= 6 || speler.getPosition == 12)
     assert(speler.getPosition == spel.getDice || speler.getPosition == spel.getDice + 6)
   }
-
 }

@@ -3,38 +3,31 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
+  Redirect,
   Switch,
   Link,
   useParams,
 } from "react-router-dom";
-import { Header } from "./Header/Header";
-
-//import reactLogo from "./images/react.svg";
-//import playLogo from "./images/play.svg";
-//import scalaLogo from "./images/scala.svg";
+//import { Header } from "./Header/Header";
 import Client from "./Client";
-
 import "./App.css";
-import { GooseGame } from "./GooseGame/GooseGame";
 import { Dominoes } from "./Dominoes/Dominoes"
+import {StartGooseGame} from "./GooseGame/StartGooseGame"
 
-const Tech = () => {
-  const params = useParams();
-  return <div>Current Route: {params.tech}</div>;
-};
+
+
 
 class App extends Component {
+
   constructor(props) {
     super(props);
-    this.state = { title: "Game of the Goose & Dominoes", counter: "1", dice: " "};
+    this.state = { title: " ", counter: "1", dice: " "};
   }
 
   async componentDidMount() {
-    Client.getSummary((summary) => {
-      this.setState({
-        title: summary.content,
-      });
-    });
+    Client.getSummary(
+      (summary) => {this.setState({title: summary.content,});}
+    );
   }
 
   async getNewCount(){
@@ -52,7 +45,6 @@ class App extends Component {
   }
 
   async getDice(){
-
     Client.getDice().then( (response) => {
         this.setState({
             dice: response.dice        
@@ -61,22 +53,21 @@ class App extends Component {
   }
 
   render() {
+    if(this.state.gooseGameStarted){
+      return <StartGooseGame game={this.state.gooseGame}/>
+    }
     return (
       <Router>
-        <Header />
-        
         <div className="App">
-        
-        <nav>
-          <button onClick={()=> this.getNewCount() } className = "button "> Teller: {this.state.counter} </button>
-          <button onClick={()=> this.getDice() } className = "button" > Dice: {this.state.dice} </button>
-        </nav>
-
-        <Routes>
-          <Route path="/GooseGame" element={<GooseGame/>}/>
-          <Route path="/Dominoes" element={<Dominoes/>} />
-        </Routes>
-
+          <nav>
+            <button onClick={()=> this.getNewCount() } className = "button "> Teller: {this.state.counter} </button>
+            <button onClick={()=> this.getDice() } className = "button" > Dice: {this.state.dice} </button>
+            <button onClick={()=> this.setState({gooseGameStarted: true})} className = "button">Start a Goose Game</button>
+          </nav>
+          <Routes>
+            <Route path="/Dominoes/Dominoes" element={<Dominoes/>} />
+            <Route path="/GooseGame/StartGooseGame" element={<StartGooseGame game={this.state.gooseGame}/>}/>
+          </Routes>
         </div>
       </Router>
     );
@@ -84,4 +75,32 @@ class App extends Component {
 }
 
 export default App;
+
+
+/*
+<button className="button"> 
+                <Link to="/StartGooseGame">Start Game of the Goose</Link>
+          </button>
+          <button className="button"> 
+                <Link to="/Dominoes">Dominoes </Link>
+          </button>
+//<Header />
+//<Route path="/PlayGooseGame" element={<GooseGame game={this.state.gooseGame}/>}/>
 //<button className = "button" > Dice: {this.state.dice} </button>
+  
+  async getNewPlayer(){
+    Client.getNewPlayer(
+      this.state.player.name
+    )
+    .then(
+      (response)=> {
+        this.setState(
+          {
+            player1: response.player
+          }
+        )
+      }
+    )
+  }
+  
+  */

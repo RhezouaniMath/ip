@@ -1,0 +1,77 @@
+.spot{
+    width:  3cm;
+    height: 3cm;
+    margin: 0.25cm 0.25cm ;
+    border: 0.1cm solid;
+    padding: 0.5cm 0.5cm;
+    color: rgb(76, 66, 8);
+    border-color:rgb(221, 38, 38);
+    background-color: rgba(209, 234, 243, 0.39);
+    /*font-family: 'Abadi';*/
+    font-family:'Times New Roman', Times, serif;
+    font-size: 16pt ;
+    font-weight: bold;
+    border-radius: 2cm; 
+}
+
+.rule{
+    font-family:'Times New Roman', Times, serif;
+    font-size: 12pt ;
+}
+
+.titleRule{
+    font-family:'Times New Roman', Times, serif;
+    color:rgba(120, 228, 25, 0.607);
+    font-size: 12pt ;
+    font-weight: italic;
+}
+
+.FINISH{
+    font-family:'Times New Roman', Times, serif;
+    color:rgba(193, 170, 37, 0.789);
+    font-size: 22pt ;
+    font-weight: italic;
+}
+
+.spotsBox{
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+    width: 40cm;
+}
+
+.boxje1{
+    width:  3cm;
+    height: 3cm;
+    left: 33.2cm;
+    margin: 0.25cm 33.2cm ;
+    border: 0.1cm solid;
+    padding: 0.5cm 0.5cm;
+    color: rgb(152, 93, 136);
+    border-color:rgb(221, 38, 38);
+    background-color: rgba(209, 234, 243, 0.39);
+    /*font-family: 'Abadi';*/
+    font-family:'Times New Roman', Times, serif;
+    font-size: 20pt ;
+    border-radius: 2cm; 
+}
+
+.boxje2{
+    width:  3cm;
+    height: 3cm;
+    left: 0cm;
+    margin: 0.25cm 0.25cm ;
+    border: 0.1cm solid;
+    padding: 0.5cm 0.5cm;
+    color: rgb(152, 93, 136);
+    border-color:rgb(221, 38, 38);
+    background-color: rgba(209, 234, 243, 0.39);
+    /*font-family: 'Abadi';*/
+    font-family:'Times New Roman', Times, serif;
+    font-size: 20pt ;
+    border-radius: 2cm; 
+}
+
+.text{
+    font-size: 10pt;
+}

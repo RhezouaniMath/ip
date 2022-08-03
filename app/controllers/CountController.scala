@@ -20,7 +20,12 @@ class CountController @Inject() (
       val json = request.body.asJson.get
       val count = (json \ "counter").as[Int]
       val newCount = count + 1
-      Ok(Json.obj("counter" -> String.valueOf(newCount)))
+      Ok(
+        Json.obj(
+          "counter" -> String.valueOf(newCount),
+          "henk" -> "Wow dit werkt misschien"
+        )
+      )
     }
   }
 }
