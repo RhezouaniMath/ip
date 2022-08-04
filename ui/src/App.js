@@ -60,8 +60,6 @@ class App extends Component {
       <Router>
         <div className="App">
           <nav>
-            <button onClick={()=> this.getNewCount() } className = "button "> Teller: {this.state.counter} </button>
-            <button onClick={()=> this.getDice() } className = "button" > Dice: {this.state.dice} </button>
             <button onClick={()=> this.setState({gooseGameStarted: true})} className = "button">Start a Goose Game</button>
           </nav>
           <Routes>
@@ -78,6 +76,8 @@ export default App;
 
 
 /*
+<button onClick={()=> this.getNewCount() } className = "button "> Teller: {this.state.counter} </button>
+            <button onClick={()=> this.getDice() } className = "button" > Dice: {this.state.dice} </button>
 <button className="button"> 
                 <Link to="/StartGooseGame">Start Game of the Goose</Link>
           </button>

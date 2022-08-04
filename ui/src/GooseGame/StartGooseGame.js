@@ -17,7 +17,8 @@ export class StartGooseGame extends Component {
         this.setState(
           {
             nrOfPlayers: this.state.nrOfPlayers,
-            dice: response.dice,
+            dice: "-1",
+            //dice: response.dice,
             gooses: response.gooses,
             finished: response.finished,
             lastMove: response.lastMove,

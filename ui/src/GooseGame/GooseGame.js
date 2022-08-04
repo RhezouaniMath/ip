@@ -65,37 +65,13 @@ for (let i = 0; i < 8; i++) {
         array8[i] = text;
 }
 
-export function destringifyListToArray(arraylist){
-    var arraylist1 = arraylist.split("List(").pop()
-    var arraylist2 = arraylist1.split(")")
-    var arraylist3 = arraylist2[0]
-    var arraylist4 = arraylist3.split(',')
-    var length = arraylist4.length
-    var finalarraylist = arraylist4.map(function(item) {return parseInt(item, length + 1);});
+export function destringifyListToArray(array){
+    var length = array.length
+    var finalarraylist = array.map(function(item) {return parseInt(item, length + 1);});
     return finalarraylist
 }
 
-export function describingPlayers(i, arraylist){
-    var finalarraylist = destringifyListToArray(arraylist)
-    var length = finalarraylist.length
-    for (let n=0; n < length; n++){
-        if (i==finalarraylist[n]){
-            <div> Player {n+1} </div>
-        }
-    }
-}
-
-/* (gooses, lastMove, position, turn, skipTurn, waitForPlayersBehind) 
-"dice" -> String.valueOf(dice),
-          "gooses" -> String.valueOf(goosesList),
-          "finished" -> String.valueOf(finished),
-          "lastMove" -> String.valueOf(lastMove2),
-          "position" -> String.valueOf(position2),
-          "turn" -> String.valueOf(turn2),
-          "skipTurn" -> String.valueOf(skipTurn2),
-          "waitForPlayersBehind" -> String.valueOf(waitForPlayersBehind2)*/
-
-export function describingSpot(i, arraylist){
+export function describingSpot(i){
     if (i == 6){
         return <div id="bridge" className = "rule"> <div className = "titleRule"> Bridge </div> <img src="./bridge.jpg" width ="100" height="auto" /> <div className="text">Go to 12</div>  </div>
     }
@@ -122,8 +98,42 @@ export function describingSpot(i, arraylist){
     }
 }
 
+export function diceDiv(dice){
+    if (dice == -1){
+        return <div>
+            We haven't throw a dice yet.
+        </div>
+    }
+    else if (dice == 0){
+        return <div>
+            We have skipped a turn.
+        </div>
+    }
+    else{
+        return <div>
+            Dice: {dice}
+        </div>
+    }
+}
+
+export function wieHeeftErGewonnen(array){
+    var length = array.length
+    for (let i=0; i<length; i++){
+        if(array[i]==63){
+            return <div>
+                Player {i+1} won the game.
+            </div>
+        }
+    }
+    return <div>
+        We are still playing.
+    </div>
+}
+
 export function GooseGame(state) {
+
     const [game,setGame]=useState(state)
+
     function play(){
         Client.playGame(
           game.game.gooses,
@@ -153,65 +163,127 @@ export function GooseGame(state) {
         )
       }
 
+      function toShowOrNotToShowButton(array){
+        var length = array.length
+        for (let i=0; i<length; i++){
+            if(array[i]==63){
+                return <div>
+                    The game has ended. It is not possible to make a move anymore.
+                </div>
+            }
+        }
+        return <div>
+                <button onClick={()=>{play()}}> Make a move. </button>
+                </div>
+    }
+
+    function showGoose(i){
+        for (let index=0; index<5; index++){
+            if (game.game.gooses[index]==i){
+                return <div> <img src="./goose.jpg" width ="auto" height="60" /> </div>
+            }
+        }
+    }
+
+    function showPlayer(i){
+        //var array = new Array(game.game.nrOfPlayers)
+        //var counter = 0
+        var str = ""
+        for (let index=0; index<game.game.nrOfPlayers; index++){
+            if (game.game.position[index]==i){
+                var nr = index + 1
+                if (str == ""){
+                    str = str + nr
+                }
+                else{
+                    str = str + "," + nr
+                }
+            }
+        }
+        if (str != "")
+            return <div> Player(s) {str} </div>
+        }
+
     //console.log(game);
 
     return  <div>
+
         <h2> 
             Game of the Goose
         </h2>
+
         <h4>
             Number of players
         </h4>
         <label>
-            Number of players: {game.game.nrOfPlayers}
+            <div>
+            Number of players: {Number(game.game.nrOfPlayers)}
+            </div>
         </label>
+
         <h4>
         Position of players
         </h4>
         <label>
             Position of players: {JSON.stringify(game.game.position)}
         </label>  
+
         <h4>
             Dice
         </h4>
         <label>
-            Dice: {game.game.dice}
+            {diceDiv(Number(game.game.dice))}
         </label>
+
+        <h4>
+            Game status
+        </h4>
+        <label>
+            {wieHeeftErGewonnen(game.game.position)}
+        </label>
+
         <h4>
             Play Game
         </h4>
-            <div>
-            <button onClick={()=>{play()}}> Make a move. </button>
-            </div>
+        <label>
+                {toShowOrNotToShowButton(game.game.position)}
+        </label>
+
+
+
         <h4>
             Game board
         </h4>
+
         <div  className = "spotsBox">
-           {array1.map(     (i) => (<div key={i} className ="spot"> {i} {describingSpot(i, game.game.position)} </div>)        )}
+           {array1.map(     (i) => (<div key={i} className ="spot"> {i} {describingSpot(i, game.game.position)} {showGoose(i)} {showPlayer(i)} </div>)        )}
         </div>
         <div className="box">
             <div className="boxje1">
                 Game of the Goose
             </div>
         </div>
+
         <div  className = "spotsBox">
-            {array2.map(     (i) => (<div key={i}  className ="spot"> {i} {describingSpot(i)} </div>)        )}
+            {array2.map(     (i) => (<div key={i}  className ="spot"> {i} {describingSpot(i)} {showGoose(i)} {showPlayer(i)} </div>)        )}
         </div>
         <div className="box">
             <div className="boxje2">
                 Game of the Goose
             </div>
         </div>
+
         <div   className = "spotsBox">
-            {array3.map(     (i) => (<div key={i}  className ="spot"> {i} {describingSpot(i)} </div>)        )}
+            {array3.map(     (i) => (<div key={i}  className ="spot"> {i} {describingSpot(i)} {showGoose(i)} {showPlayer(i)} </div>)        )}
         </div>
         <div className="box">
             <div className="boxje1">
                 Game of the Goose
             </div>
         </div>
+
         <div    className = "spotsBox">
-            {array4.map(     (i) => (<div key={i}  className ="spot"> {i} {describingSpot(i)} </div>)        )}
+            {array4.map(     (i) => (<div key={i}  className ="spot"> {i} {describingSpot(i)} {showGoose(i)} {showPlayer(i)} </div>)        )}
         </div>
 
         <div  className="box">
@@ -219,32 +291,36 @@ export function GooseGame(state) {
                 Game of the Goose
             </div>
         </div>
+
         <div  className = "spotsBox">
-            {array5.map(     (i) => (<div key={i}  className ="spot"> {i} {describingSpot(i)} </div>)        )}
+            {array5.map(     (i) => (<div key={i}  className ="spot"> {i} {describingSpot(i)} {showGoose(i)} {showPlayer(i)} </div>)        )}
         </div>
         <div className="box">
             <div  className="boxje1">
                 Game of the Goose 
             </div>
         </div>
+
         <div  className = "spotsBox">
-            {array6.map(     (i) => (<div key={i}  className ="spot"> {i} {describingSpot(i)} </div>)        )}
+            {array6.map(     (i) => (<div key={i}  className ="spot"> {i} {describingSpot(i)} {showGoose(i)}  {showPlayer(i)} </div>)        )}
         </div>
         <div  className="box">
             <div  className="boxje2">
                 Game of the Goose
             </div>
         </div>
+
         <div    className = "spotsBox">
-            {array7.map(     (i) => (<div key={i}  className ="spot"> {i} {describingSpot(i)} </div>)        )}
+            {array7.map(     (i) => (<div key={i}  className ="spot"> {i} {describingSpot(i)} {showGoose(i)} {showPlayer(i)} </div>)        )}
         </div>
         <div  className="box">
             <div  className="boxje1">
                 Game of the Goose
             </div>
+
         </div>
         <div    className = "spotsBox">
-            {array8.map(     (i) => (<div key={i}  className ="spot"> {i} {describingSpot(i)} </div>)        )}
+            {array8.map(     (i) => (<div key={i}  className ="spot"> {i} {describingSpot(i)} {showGoose(i)} {showPlayer(i)} </div>)        )}
         </div>
     </div>
 }
